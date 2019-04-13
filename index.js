@@ -20,8 +20,8 @@ admin.initializeApp({
 
 var db = admin.firestore()
 
-server.listen(80, () => {
-    console.log("Server running on port 80");
+server.listen(5000, () => {
+    console.log("Server running on port 5000");
 })
 
 io.on('connection', function(socket){

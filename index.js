@@ -12,6 +12,7 @@ const io = require('socket.io')(server)
 var serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
 var challonge_key = process.env.CHALLONGE_KEY
 var challonge_user = process.env.CHALLONGE_USER
+var port = process.env.PORT
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
@@ -20,8 +21,8 @@ admin.initializeApp({
 
 var db = admin.firestore()
 
-server.listen(5000, () => {
-    console.log("Server running on port 5000");
+server.listen(port, () => {
+    console.log("Server running on port "+port);
 })
 
 io.on('connection', function(socket){

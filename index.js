@@ -520,13 +520,10 @@ app.get('*', (req, resolve) => {
         url = '/'
     }
     let options = {
-        root: __dirname + '/public'
+        root: __dirname + '/app/build'
     }
     resolve.sendFile(url, options, (err) => {
         if(err){
-            console.log(options.root)
-            console.log(url)
-            console.log(err)
             resolve.sendFile('/index.html', options)
         }
     });

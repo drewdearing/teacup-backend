@@ -3,12 +3,12 @@ const request = require('request')
 const admin = require('firebase-admin')
 const express = require("express")
 const cors = require('cors')
+const path = require('path')
 const app = express()
 app.use(cors())
 app.use(express.json())
 const server = require('http').Server(app)
 const io = require('socket.io')(server)
-
 
 var serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
 var challonge_key = process.env.CHALLONGE_KEY
@@ -514,6 +514,24 @@ app.get("/participants", (req, resolve) => {
     })
 })
 
+app.get('*', (req, resolve) => {
+    var url = req.originalUrl.replace(/\/$/, "")
+    if(!url || url == ''){
+        url = '/'
+    }
+    let options = {
+        root: __dirname + '/public'
+    }
+    resolve.sendFile(url, options, (err) => {
+        if(err){
+            console.log(options.root)
+            console.log(url)
+            console.log(err)
+            resolve.sendFile('/index.html', options)
+        }
+    });
+})
+
 async function getLabel(label, participant){
     let type = label.data().type
     let data = {
@@ -614,5 +632,3 @@ function setMatchWinner(user, key, id, match_id, winner, scores_csv){
         }
     })
 }
-
-app.use('/*', express.static('public'))

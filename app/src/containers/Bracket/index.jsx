@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import openSocket from 'socket.io-client';
 import { withRouter } from 'react-router-dom';
 import { withCookies, Cookies } from 'react-cookie';
 import { Card, CardBody, Col, Container, Row } from 'reactstrap';
-import openSocket from 'socket.io-client';
 import Match from './components/Match';
 import ParticipantEditor from './components/ParticipantEditor';
 import LabelEditor from './components/LabelEditor';
@@ -19,7 +19,7 @@ const defaultProps = {
   match: null,
 };
 
-class Home extends Component {
+class Bracket extends Component {
   constructor(props) {
     super(props);
     const { cookies, match } = this.props;
@@ -33,7 +33,6 @@ class Home extends Component {
         user: cookies.get('user'),
         loading: match.params.id != null,
         title: 'Load Bracket',
-        subTitle: 'Load a Challonge bracket to get started!',
       };
       console.log(this.state.user);
     } else {
@@ -60,12 +59,8 @@ class Home extends Component {
     }
   }
 
-  setUpSocket = () => {
-    const { socket } = this.state;
-    socket.on('current_labels', data => this.handleLabelUpdate(data));
-  }
-
-  getLabels = (bracket, title, subTitle) => {
+  getLabels = (bracket, title) => {
+    console.log(title);
     const apiURL = `https://teacup-challonge.herokuapp.com/labels?id=${bracket}`;
     fetch(apiURL, {
       method: 'get',
@@ -77,12 +72,11 @@ class Home extends Component {
             console.log(data);
             this.setState({
               bracket,
-              title,
-              subTitle,
+              socket: openSocket(`https://teacup-challonge.herokuapp.com?id=${bracket}`),
               loading: false,
               labels: data,
+              title,
             });
-            this.startService();
           });
         },
         () => {
@@ -91,57 +85,10 @@ class Home extends Component {
       );
   }
 
-  handleLabelUpdate = (data) => {
-    const { currentMatch } = this.state;
-    if ('match_id' in data) {
-      currentMatch.match_id = data.match_id;
-    }
-    if ('round' in data) {
-      currentMatch.round = data.round;
-    }
-    if ('participants' in data) {
-      Object.keys(data.participants).forEach((id) => {
-        if (!('participants' in currentMatch)) {
-          currentMatch.participants = {};
-        }
-        if (id in currentMatch.participants) {
-          Object.keys(data.participants[id]).forEach((label) => {
-            currentMatch.participants[id][label] = data.participants[id][label];
-          });
-        } else {
-          currentMatch.participants[id] = data.participants[id];
-        }
-      });
-    }
-    if ('participant1' in data && 'participant2' in data) {
-      currentMatch.participant1 = data.participant1;
-      currentMatch.participant2 = data.participant2;
-    }
-    this.setState({ currentMatch });
-  }
-
-  updateLabel = (id, e) => {
-    const { currentMatch } = this.state;
-    if ('participants' in currentMatch) {
-      if (id in currentMatch.participants) {
-        const participant = currentMatch.participants[id];
-        participant[e.target.name] = e.target.value;
-        currentMatch.participants[id] = participant;
-        this.setState({ currentMatch });
-      }
-    }
-  }
-
   addLabel = (label) => {
     const { labels } = this.state;
     labels[label.name] = label;
     this.setState({ labels });
-  }
-
-  updateRound = (e) => {
-    const { currentMatch } = this.state;
-    currentMatch.round = e.target.value;
-    this.setState({ currentMatch });
   }
 
   updateLabelProperty = (id, e) => {
@@ -192,29 +139,6 @@ class Home extends Component {
     }
   }
 
-  startService = () => {
-    const { bracket } = this.state;
-    const apiURL = `https://teacup-challonge.herokuapp.com/currentMatch?id=${bracket}`;
-    fetch(apiURL, {
-      method: 'get',
-    })
-      .then(
-        (result) => {
-          console.log('result returned.');
-          result.json().then((data) => {
-            this.setState({
-              currentMatch: data,
-              socket: openSocket(`https://teacup-challonge.herokuapp.com?id=${bracket}`),
-            });
-            this.setUpSocket();
-          });
-        },
-        () => {
-          console.log('error');
-        },
-      );
-  }
-
   updateBracket = (urlCode) => {
     const apiURL = `https://teacup-challonge.herokuapp.com/tournament?id=${urlCode}`;
     fetch(apiURL, {
@@ -228,7 +152,6 @@ class Home extends Component {
             this.getLabels(
               urlCode,
               data.tournament.name,
-              'Update stream match data live!',
             );
           });
         },
@@ -240,7 +163,7 @@ class Home extends Component {
 
   loadBracket = (urlCode) => {
     const { history } = this.props;
-    history.push({ pathname: `/brackets/${urlCode}` });
+    history.push({ pathname: `/bracket/${urlCode}` });
     this.setState({
       loading: true,
     });
@@ -251,9 +174,7 @@ class Home extends Component {
       bracket: null,
       labels: null,
       loading: false,
-      socket: null,
       title: 'Load Bracket',
-      subTitle: 'Load a Challonge bracket to get started!',
     });
   }
 
@@ -275,12 +196,12 @@ class Home extends Component {
             if (data.isOwner) {
               this.updateBracket(challongeURL);
             } else {
-              history.push({ pathname: '/brackets' });
+              history.push({ pathname: '/bracket' });
             }
           });
         },
         () => {
-          history.push({ pathname: '/brackets' });
+          history.push({ pathname: '/bracket' });
         },
       );
   }
@@ -290,41 +211,31 @@ class Home extends Component {
       return (
         <Container className="dashboard">
           <Row>
-            <Col>
+            <Col md={12}>
+              <h3 className="page-title">{this.state.title}</h3>
+            </Col>
+          </Row>
+          <Row>
+            <Col md>
               <Card>
                 <CardBody>
                   <div className="card__title">
-                    <h5 className="bold-text">{this.state.title}</h5>
-                    <h5 className="subhead">{this.state.subTitle}</h5>
+                    <h5 className="bold-text">Current Match</h5>
+                    <h5 className="subhead">Update stream match data live!</h5>
                   </div>
                   <Match
                     user={this.state.user}
                     bracket={this.state.bracket}
                     labels={this.state.labels}
-                    currentMatch={this.state.currentMatch}
+                    socket={this.state.socket}
                     loadBracket={this.loadBracket}
-                    updateLabel={this.updateLabel}
-                    updateRound={this.updateRound}
-                  />
-                </CardBody>
-              </Card>
-            </Col>
-            <Col>
-              <Card>
-                <CardBody>
-                  <div className="card__title">
-                    <h5 className="bold-text">Participants</h5>
-                    <h5 className="subhead">Add default values for participants.</h5>
-                  </div>
-                  <ParticipantEditor
-                    bracket={this.state.bracket}
                   />
                 </CardBody>
               </Card>
             </Col>
           </Row>
           <Row>
-            <Col md={6}>
+            <Col md>
               <Card>
                 <CardBody>
                   <div className="card__title">
@@ -336,6 +247,19 @@ class Home extends Component {
                     labels={this.state.labels}
                     updateLabelProperty={this.updateLabelProperty}
                     addLabel={this.addLabel}
+                  />
+                </CardBody>
+              </Card>
+            </Col>
+            <Col md>
+              <Card>
+                <CardBody>
+                  <div className="card__title">
+                    <h5 className="bold-text">Participants</h5>
+                    <h5 className="subhead">Add default values for participants.</h5>
+                  </div>
+                  <ParticipantEditor
+                    bracket={this.state.bracket}
                   />
                 </CardBody>
               </Card>
@@ -363,7 +287,7 @@ class Home extends Component {
   }
 }
 
-Home.propTypes = propTypes;
-Home.defaultProps = defaultProps;
+Bracket.propTypes = propTypes;
+Bracket.defaultProps = defaultProps;
 
-export default withRouter(withCookies(Home));
+export default withRouter(withCookies(Bracket));

@@ -5,6 +5,7 @@ import MainWrapper from './MainWrapper';
 
 import LogIn from '../LogIn/index';
 import Home from '../Home/index';
+import Download from '../Download/index';
 
 const wrappedRoutes = () => (
   <div>
@@ -12,7 +13,8 @@ const wrappedRoutes = () => (
     <div className="container__wrap">
       <Route path="/brackets/:id?" component={Home} />
       <Route exact path="/" component={Home} />
-
+      <Route exact path="/download" component={Download} />
+      <Route exact path="/downloads" component={Download} />
     </div>
   </div>
 );

@@ -192,72 +192,6 @@ class Home extends Component {
     }
   }
 
-  update = (e) => {
-    const { bracket, currentMatch, user } = this.state;
-    e.preventDefault();
-    currentMatch.id = bracket;
-    const apiURL = 'https://teacup-challonge.herokuapp.com/match/update';
-    const apiURL2 = 'https://teacup-challonge.herokuapp.com/match/update/score';
-    currentMatch.id = bracket;
-    currentMatch.user = user.user;
-    currentMatch.key = user.key;
-    fetch(apiURL, {
-      method: 'put',
-      body: JSON.stringify(currentMatch),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(
-        (result) => {
-          console.log(result);
-        },
-        () => {
-          console.log('error');
-        },
-      );
-    fetch(apiURL2, {
-      method: 'put',
-      body: JSON.stringify(currentMatch),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(
-        (result) => {
-          console.log(result);
-        },
-        () => {
-          console.log('error');
-        },
-      );
-  }
-
-  finish = (e) => {
-    const { bracket, currentMatch, user } = this.state;
-    e.preventDefault();
-    currentMatch.id = bracket;
-    const apiURL = 'https://teacup-challonge.herokuapp.com/match/complete';
-    currentMatch.id = bracket;
-    currentMatch.user = user.user;
-    currentMatch.key = user.key;
-    fetch(apiURL, {
-      method: 'put',
-      body: JSON.stringify(currentMatch),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
-      .then(
-        (result) => {
-          console.log(result);
-        },
-        () => {
-          console.log('error');
-        },
-      );
-  }
-
   startService = () => {
     const { bracket } = this.state;
     const apiURL = `https://teacup-challonge.herokuapp.com/currentMatch?id=${bracket}`;
@@ -371,8 +305,6 @@ class Home extends Component {
                     loadBracket={this.loadBracket}
                     updateLabel={this.updateLabel}
                     updateRound={this.updateRound}
-                    update={this.update}
-                    finish={this.finish}
                   />
                 </CardBody>
               </Card>

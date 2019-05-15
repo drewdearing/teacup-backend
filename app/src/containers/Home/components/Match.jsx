@@ -13,8 +13,6 @@ const propTypes = {
   loadBracket: PropTypes.func,
   updateLabel: PropTypes.func,
   updateRound: PropTypes.func,
-  update: PropTypes.func,
-  finish: PropTypes.func,
 };
 
 const defaultProps = {
@@ -25,13 +23,77 @@ const defaultProps = {
   loadBracket: null,
   updateLabel: null,
   updateRound: null,
-  update: null,
-  finish: null,
 };
 
 class Match extends PureComponent {
   componentWillReceiveProps() {
     this.forceUpdate();
+  }
+
+  update = (e) => {
+    const { bracket, currentMatch, user } = this.props;
+    e.preventDefault();
+    currentMatch.id = bracket;
+    const apiURL = 'https://teacup-challonge.herokuapp.com/match/update';
+    const apiURL2 = 'https://teacup-challonge.herokuapp.com/match/update/score';
+    currentMatch.id = bracket;
+    currentMatch.user = user.user;
+    currentMatch.key = user.key;
+    fetch(apiURL, {
+      method: 'put',
+      body: JSON.stringify(currentMatch),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        () => {
+          console.log('error');
+        },
+      );
+    fetch(apiURL2, {
+      method: 'put',
+      body: JSON.stringify(currentMatch),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        () => {
+          console.log('error');
+        },
+      );
+  }
+
+  finish = (e) => {
+    const { bracket, currentMatch, user } = this.props;
+    e.preventDefault();
+    currentMatch.id = bracket;
+    const apiURL = 'https://teacup-challonge.herokuapp.com/match/complete';
+    currentMatch.id = bracket;
+    currentMatch.user = user.user;
+    currentMatch.key = user.key;
+    fetch(apiURL, {
+      method: 'put',
+      body: JSON.stringify(currentMatch),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then(
+        (result) => {
+          console.log(result);
+        },
+        () => {
+          console.log('error');
+        },
+      );
   }
 
   render() {
@@ -42,8 +104,6 @@ class Match extends PureComponent {
       currentMatch,
       updateLabel,
       updateRound,
-      update,
-      finish,
     } = this.props;
     if (bracket != null && labels != null) {
       if (currentMatch != null && currentMatch.match_id != null) {
@@ -79,14 +139,14 @@ class Match extends PureComponent {
               <Button
                 type="submit"
                 color="secondary"
-                onClick={e => finish(e)}
+                onClick={e => this.finish(e)}
               >
                 Finish Set
               </Button>
               <Button
                 color="primary"
                 type="submit"
-                onClick={e => update(e)}
+                onClick={e => this.update(e)}
               >
                 Update
               </Button>

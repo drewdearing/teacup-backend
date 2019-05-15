@@ -6,8 +6,8 @@ const ChromeExtensionCard = () => (
     <Card>
       <CardBody>
         <div className="card__title">
-          <h5 className="bold-text">teaCup Desktop Client</h5>
-          <h5 className="subhead">Sync text files and images with current labels.</h5>
+          <h5 className="bold-text">Chrome Extension for Challonge</h5>
+          <h5 className="subhead">Queue matches to be streamed right from the bracket page.</h5>
         </div>
         <p>
           <a

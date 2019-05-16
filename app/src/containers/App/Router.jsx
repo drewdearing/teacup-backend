@@ -6,7 +6,7 @@ import MainWrapper from './MainWrapper';
 import LogIn from '../LogIn/index';
 import Bracket from '../Bracket/index';
 import Download from '../Download/index';
-import Landing from '../Landing/index';
+import Landing from '../Landing/Landing';
 
 const wrappedRoutes = () => (
   <div>

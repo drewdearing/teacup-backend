@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 
+import { withRouter } from 'react-router-dom';
+import { withCookies } from 'react-cookie';
+
 class Landing extends Component {
   constructor(props) {
     super(props);
+    this.state = { something: "hello" };
   }
 
   render() {
@@ -25,4 +29,4 @@ class Landing extends Component {
   }
 }
 
-export default Landing;
+export default withRouter(withCookies(Landing));

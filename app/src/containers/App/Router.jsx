@@ -6,15 +6,17 @@ import MainWrapper from './MainWrapper';
 import LogIn from '../LogIn/index';
 import Bracket from '../Bracket/index';
 import Download from '../Download/index';
+import Landing from '../Landing/index';
 
 const wrappedRoutes = () => (
   <div>
     <Layout />
     <div className="container__wrap">
-      <Route path="/bracket/:id?" component={Bracket} />
-      <Route exact path="/" component={Bracket} />
+      <Route exact path="/" component={Landing} />
       <Route exact path="/download" component={Download} />
       <Route exact path="/downloads" component={Download} />
+      <Route exact path="/login" component={LogIn} />
+      <Route path="/bracket/:id?" component={Bracket} />
     </div>
   </div>
 );
@@ -23,7 +25,6 @@ const Router = () => (
   <MainWrapper>
     <main>
       <Switch>
-        <Route exact path="/login" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
       </Switch>
     </main>

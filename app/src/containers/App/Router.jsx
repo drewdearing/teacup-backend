@@ -11,10 +11,11 @@ const wrappedRoutes = () => (
   <div>
     <Layout />
     <div className="container__wrap">
+      <Route exact path="/" component={Download} />
       <Route path="/bracket/:id?" component={Bracket} />
-      <Route exact path="/" component={Bracket} />
       <Route exact path="/download" component={Download} />
       <Route exact path="/downloads" component={Download} />
+      <Route exact path="/login" component={LogIn} />
     </div>
   </div>
 );
@@ -23,7 +24,6 @@ const Router = () => (
   <MainWrapper>
     <main>
       <Switch>
-        <Route exact path="/login" component={LogIn} />
         <Route path="/" component={wrappedRoutes} />
       </Switch>
     </main>

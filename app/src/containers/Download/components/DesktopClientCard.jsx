@@ -13,7 +13,7 @@ const DesktopClientCard = () => (
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://firebasestorage.googleapis.com/v0/b/teacup-challonge.appspot.com/o/teaCup-windows.zip?alt=media&token=fe1c1483-34d5-4dd5-a436-63a60ebba884"
+            href="https://bit.ly/2WOpjXW"
           >
             Windows Download
           </a>
@@ -22,7 +22,7 @@ const DesktopClientCard = () => (
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://firebasestorage.googleapis.com/v0/b/teacup-challonge.appspot.com/o/teaCup-mac.zip?alt=media&token=0731ddac-3322-4c2b-a21b-cc2ae3e89b9d"
+            href="https://bit.ly/2WbuX9q"
           >
             Mac Download
           </a>
@@ -31,7 +31,7 @@ const DesktopClientCard = () => (
           <a
             target="_blank"
             rel="noopener noreferrer"
-            href="https://firebasestorage.googleapis.com/v0/b/teacup-challonge.appspot.com/o/teaCup-linux.zip?alt=media&token=3b9e1500-c7c9-4d5e-aaa0-06b399b5fe3d"
+            href="https://bit.ly/2VJkdzG"
           >
             Linux Download
           </a>

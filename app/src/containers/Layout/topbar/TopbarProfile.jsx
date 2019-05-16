@@ -15,14 +15,16 @@ class TopbarProfile extends PureComponent {
   constructor(props) {
     super(props);
     const { cookies } = this.props;
-    this.state = {
-      collapse: false,
-      username: 'User',
-    };
-    if (cookies.get('user')) {
+    if (cookies.get('user') != null) {
       this.state = {
         username: cookies.get('user').user,
         collapse: false,
+        isLoggedIn: true,
+      };
+    } else {
+      this.state = {
+        collapse: false,
+        isLoggedIn: false,
       };
     }
   }
@@ -31,21 +33,43 @@ class TopbarProfile extends PureComponent {
     this.setState({ collapse: !this.state.collapse });
   };
 
+  logOut = () => {
+    const { cookies } = this.props;
+    cookies.remove('user');
+  }
+
   render() {
-    const { username, collapse } = this.state;
+    const { username, collapse, isLoggedIn } = this.state;
+    if (isLoggedIn) {
+      return (
+        <div className="topbar__profile">
+          <button className="topbar__avatar" onClick={this.toggle}>
+            <img className="topbar__avatar-img" src={Ava} alt="avatar" />
+            <p className="topbar__avatar-name">{username}</p>
+            <DownIcon className="topbar__icon" />
+          </button>
+          {collapse && <button className="topbar__back" onClick={this.toggle} />}
+          <Collapse isOpen={collapse} className="topbar__menu-wrap">
+            <div className="topbar__menu">
+              <TopbarMenuLink title="Load Bracket" icon="list" path="/bracket" />
+              <div className="topbar__menu-divider" />
+              <TopbarMenuLink title="Log Out" onClick={this.logOut} icon="exit" path="/login" />
+            </div>
+          </Collapse>
+        </div>
+      );
+    }
     return (
       <div className="topbar__profile">
         <button className="topbar__avatar" onClick={this.toggle}>
           <img className="topbar__avatar-img" src={Ava} alt="avatar" />
-          <p className="topbar__avatar-name">{username}</p>
+          <p className="topbar__avatar-name">Account</p>
           <DownIcon className="topbar__icon" />
         </button>
         {collapse && <button className="topbar__back" onClick={this.toggle} />}
         <Collapse isOpen={collapse} className="topbar__menu-wrap">
           <div className="topbar__menu">
-            <TopbarMenuLink title="Load Bracket" icon="list" path="/bracket" />
-            <div className="topbar__menu-divider" />
-            <TopbarMenuLink title="Log Out" icon="exit" path="/login" />
+            <TopbarMenuLink title="Log In" icon="exit" path="/login" />
           </div>
         </Collapse>
       </div>

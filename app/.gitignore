@@ -6,3 +6,5 @@
 
 #electron
 /electron/node_modules
+
+build/

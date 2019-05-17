@@ -4,7 +4,12 @@
   "description": "RESTful API for teaCup challonge",
   "main": "index.js",
   "scripts": {
+    "start": "node index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "engines": {
+    "node": "10.5.3",
+    "npm": "6.4.1"
   },
   "author": "drew dearing",
   "license": "ISC",

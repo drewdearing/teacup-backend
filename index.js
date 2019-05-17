@@ -93,6 +93,28 @@ app.get("/init", (req, resolve) => {
     })
 })
 
+app.get("/tournaments", async (req, resolve) => {
+    let user = req.query.id
+    if(user){
+        let userRef = db.collection('users').doc(user)
+        let tournamentsRef = userRef.collection('tournaments')
+        let tournaments = await tournamentsRef.orderBy("lastActive", "desc").get()
+        let tournamentData = []
+        tournaments.forEach((tournament) => {
+            if(tournament.exists){
+                tournamentData.push({
+                    id:tournament.id,
+                    data:tournament.data()
+                })
+            }
+        })
+        resolve.json(tournamentData)
+    }
+    else{
+        resolve.status(400).send('Bad Request')
+    }
+})
+
 app.get("/labels", async (req, resolve) => {
     let id = req.query.id
     let tournamentRef = db.collection('tournaments').doc(id)
@@ -518,19 +540,16 @@ app.get("/participants", (req, resolve) => {
     })
 })
 
-app.get('*', (req, resolve) => {
-    var url = req.originalUrl.replace(/\/$/, "")
-    if(!url || url == ''){
-        url = '/'
+app.get('/downloads/*', (req, resolve) => {
+    var file = path.basename(req.originalUrl).toUpperCase()
+    let download_url = process.env[file]
+    console.log(file)
+    if(download_url){
+        resolve.redirect(download_url)
     }
-    let options = {
-        root: __dirname + '/app/build'
+    else{
+        resolve.status(400).send('File not found!')
     }
-    resolve.sendFile(url, options, (err) => {
-        if(err){
-            resolve.sendFile('/index.html', options)
-        }
-    });
 })
 
 async function getLabel(label, participant){

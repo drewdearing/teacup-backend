@@ -53,6 +53,7 @@ app.get("/init", (req, resolve) => {
                 if(id != null) {
                     data.isOwner = res && res.statusCode == 200
                     let tournamentRef = db.collection('tournaments').doc(id)
+                    let userRef = db.collection('users').doc(user)
                     tournamentRef.get().then((tournamentDoc) => {
                         if(tournamentDoc.exists){
                             data.data = tournamentDoc.data()
@@ -75,6 +76,9 @@ app.get("/init", (req, resolve) => {
                                 resolve.json(data)
                             }
                         }
+                    })
+                    userRef.collection('tournaments').doc(id).set({
+                        lastActive: new Date()
                     })
                 }
                 else{

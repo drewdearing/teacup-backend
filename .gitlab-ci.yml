@@ -2,6 +2,7 @@ image: node:latest
 
 stages:
   - production
+  - beta
 
 production:
   type: deploy
@@ -17,7 +18,7 @@ production:
 
 beta:
   type: deploy
-  stage: production
+  stage: beta
   image: ruby:latest
   script:
     - apt-get update -qy

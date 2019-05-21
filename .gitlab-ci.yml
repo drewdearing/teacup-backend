@@ -2,6 +2,7 @@ image: node:latest
 
 stages:
   - production
+  - beta
 
 production:
   type: deploy
@@ -17,12 +18,12 @@ production:
 
 beta:
   type: deploy
-  stage: production
+  stage: beta
   image: ruby:latest
   script:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=teacup-challonge --api-key=$HEROKU_API_KEY
+    - dpl --provider=heroku --app=teacup-gg --api-key=$HEROKU_API_KEY
   only:
     - beta

@@ -14,3 +14,15 @@ production:
     - dpl --provider=heroku --app=teacup-challonge --api-key=$HEROKU_API_KEY
   only:
     - master
+
+beta:
+  type: deploy
+  stage: production
+  image: ruby:latest
+  script:
+    - apt-get update -qy
+    - apt-get install -y ruby-dev
+    - gem install dpl
+    - dpl --provider=heroku --app=teacup-challonge --api-key=$HEROKU_API_KEY
+  only:
+    - beta

@@ -22,6 +22,12 @@ admin.initializeApp({
 
 var db = admin.firestore().collection('environments').doc(process.env.FIRESTORE_ENV)
 
+db.get().then((dbDoc) => {
+    if(!dbDoc.exists){
+        db.set({})
+    }
+})
+
 server.listen(port, () => {
     console.log("Server running on port "+port);
 })

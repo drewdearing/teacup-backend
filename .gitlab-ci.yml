@@ -24,6 +24,6 @@ beta:
     - apt-get update -qy
     - apt-get install -y ruby-dev
     - gem install dpl
-    - dpl --provider=heroku --app=teacup-gg --api-key=$HEROKU_API_KEY
+    - dpl --provider=heroku --app=teacup-dev --api-key=$HEROKU_API_KEY
   only:
     - beta

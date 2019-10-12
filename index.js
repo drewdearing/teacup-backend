@@ -17,10 +17,10 @@ var port = process.env.PORT
 
 admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
-    databaseURL: "https://teacup-challonge.firebaseio.com"
+    databaseURL: "https://teacup-gg.firebaseio.com"
 })
 
-var db = admin.firestore()
+var db = admin.firestore().collection('environments').doc(process.env.FIRESTORE_ENV)
 
 server.listen(port, () => {
     console.log("Server running on port "+port);
